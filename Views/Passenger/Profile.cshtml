@@ -1,0 +1,100 @@
+﻿@model BusTicketBookingSystem.Models.Passenger
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <h1 class="mb-4">👤 My Profile</h1>
+
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    @TempData["Message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            <div class="card shadow-sm">
+                <div class="card-body p-4">
+
+                    <form asp-action="Profile" method="post">
+                        @Html.AntiForgeryToken()
+
+                        <div class="mb-3">
+                            <label class="form-label">Email</label>
+                            <input class="form-control" value="@Model.Email" readonly disabled />
+                            <small class="text-muted">Email cannot be changed.</small>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Full Name</label>
+                            <input name="fullName" class="form-control"
+                                   value="@Model.FullName"
+                                   required minlength="3" maxlength="50" />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Contact Number</label>
+                            <input name="contactNo" class="form-control"
+                                   value="@Model.ContactNo"
+                                   required />
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">Gender</label>
+                            <select name="gender" class="form-select">
+                                <option value="Male" selected="@(Model.Gender == "Male")">Male</option>
+                                <option value="Female" selected="@(Model.Gender == "Female")">Female</option>
+                                <option value="Other" selected="@(Model.Gender == "Other")">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="d-flex gap-2">
+                            <button type="submit" class="btn btn-primary">
+                                💾 Save Changes
+                            </button>
+                            <a asp-controller="Account" asp-action="ChangePassword"
+                               class="btn btn-warning">
+                                🔐 Change Password
+                            </a>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+
+            @* Account Info *@
+            <div class="card shadow-sm mt-4">
+                <div class="card-body">
+                    <h5>📋 Account Info</h5>
+                    <dl class="row mb-0 mt-3">
+                        <dt class="col-sm-3">Passenger ID</dt>
+                        <dd class="col-sm-9">#@Model.PassengerID</dd>
+
+                        <dt class="col-sm-3">Status</dt>
+                        <dd class="col-sm-9">
+                            <span class="badge bg-@(Model.IsActive ? "success" : "danger")">
+                                @(Model.IsActive ? "Active" : "Inactive")
+                            </span>
+                        </dd>
+
+                        <dt class="col-sm-3">Member Since</dt>
+                        <dd class="col-sm-9">@Model.CreatedAt.ToString("dd MMM yyyy")</dd>
+                    </dl>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

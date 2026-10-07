@@ -1,0 +1,44 @@
+﻿@model BusTicketBookingSystem.Models.PaymentRequest
+@{ ViewData["Title"] = "Review Payment"; }
+
+<h1>🔍 Review Payment Request</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Booking #</dt><dd class="col-sm-9">@Model.Booking?.BookingNumber</dd>
+    <dt class="col-sm-3">Passenger</dt><dd class="col-sm-9">@Model.Booking?.Passenger?.FullName</dd>
+    <dt class="col-sm-3">Email</dt><dd class="col-sm-9">@Model.Booking?.Passenger?.Email</dd>
+    <dt class="col-sm-3">Route</dt><dd class="col-sm-9">@Model.Booking?.Schedule?.Bus?.Route?.Origin → @Model.Booking?.Schedule?.Bus?.Route?.Destination</dd>
+    <dt class="col-sm-3">Travel Date</dt><dd class="col-sm-9">@Model.Booking?.Schedule?.TravelDate.ToString("dd MMM yyyy")</dd>
+    <dt class="col-sm-3">Seats</dt><dd class="col-sm-9">@Model.Booking?.SeatNumbersDisplay</dd>
+    <dt class="col-sm-3">Amount</dt><dd class="col-sm-9">Rs. @Model.Amount.ToString("N0")</dd>
+    <dt class="col-sm-3">Method</dt><dd class="col-sm-9">@Model.PaymentMethod</dd>
+    <dt class="col-sm-3">Reference</dt><dd class="col-sm-9">@Model.PaymentReference</dd>
+    <dt class="col-sm-3">Submitted</dt><dd class="col-sm-9">@Model.SubmittedAt.ToString("dd MMM yyyy HH:mm")</dd>
+</dl>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Approve" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.PaymentRequestID" />
+            <div class="mb-3">
+                <label>Approval Remarks (optional)</label>
+                <textarea name="remarks" class="form-control"></textarea>
+            </div>
+            <button class="btn btn-success">✅ Approve</button>
+        </form>
+    </div>
+    <div class="col-md-6">
+        <form asp-action="Reject" method="post">
+            @Html.AntiForgeryToken()
+            <input type="hidden" name="id" value="@Model.PaymentRequestID" />
+            <div class="mb-3">
+                <label>Rejection Reason (required)</label>
+                <textarea name="remarks" class="form-control" required></textarea>
+            </div>
+            <button class="btn btn-danger">❌ Reject</button>
+        </form>
+    </div>
+</div>
+
+<a asp-action="Pending" class="btn btn-secondary mt-3">Back</a>

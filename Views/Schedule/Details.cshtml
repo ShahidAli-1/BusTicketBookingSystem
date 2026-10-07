@@ -1,0 +1,80 @@
+﻿@model BusTicketBookingSystem.Models.Schedule
+@{
+    ViewData["Title"] = "Schedule Details";
+    var isDeparted = (bool)ViewBag.IsDeparted;
+    var departureDateTime = (DateTime)ViewBag.DepartureDateTime;
+}
+
+<h1>📅 Schedule Details</h1>
+
+@* ⭐ Departed warning banner *@
+@if (isDeparted && Model.Status == "Active")
+{
+    <div class="alert alert-warning">
+        ⏰ <strong>This schedule has already departed.</strong>
+        Departure was on @departureDateTime.ToString("dd MMM yyyy HH:mm").
+    </div>
+}
+else if (Model.Status == "Completed")
+{
+    <div class="alert alert-secondary">
+        ✅ This schedule is marked as <strong>Completed</strong>.
+    </div>
+}
+
+<dl class="row">
+    <dt class="col-sm-3">Bus</dt>
+    <dd class="col-sm-9">@Model.Bus?.BusNumber - @Model.Bus?.BusName</dd>
+
+    <dt class="col-sm-3">Route</dt>
+    <dd class="col-sm-9">@Model.Bus?.Route?.RouteName</dd>
+
+    <dt class="col-sm-3">Date</dt>
+    <dd class="col-sm-9">@Model.TravelDate.ToString("dd MMM yyyy")</dd>
+
+    <dt class="col-sm-3">Departure</dt>
+    <dd class="col-sm-9">@Model.DepartureTime</dd>
+
+    <dt class="col-sm-3">Arrival</dt>
+    <dd class="col-sm-9">@Model.ArrivalTime</dd>
+
+    <dt class="col-sm-3">Fare</dt>
+    <dd class="col-sm-9">Rs. @Model.Fare.ToString("N0")</dd>
+
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">
+        <span class="badge bg-@(Model.Status switch {
+            "Active" => "success",
+            "Cancelled" => "danger",
+            "Completed" => "dark",
+            _ => "secondary"
+        })">@Model.Status</span>
+
+        @if (isDeparted && Model.Status == "Active")
+        {
+            <span class="badge bg-dark">⏰ Departed</span>
+        }
+    </dd>
+</dl>
+
+<h4 class="mt-4">Seat Summary</h4>
+<div class="row">
+    <div class="col-md-3">
+        <div class="alert alert-success">Available: @ViewBag.AvailableSeats</div>
+    </div>
+    <div class="col-md-3">
+        <div class="alert alert-warning">Reserved: @ViewBag.ReservedSeats</div>
+    </div>
+    <div class="col-md-3">
+        <div class="alert alert-danger">Booked: @ViewBag.BookedSeats</div>
+    </div>
+</div>
+
+<a asp-action="Index" class="btn btn-secondary mt-3">Back</a>
+@if (Model.Status == "Completed" || Model.Status == "Cancelled")
+{
+    <a asp-action="Reschedule" asp-route-id="@Model.ScheduleID"
+       class="btn btn-warning">
+        🔄 Reschedule This Trip
+    </a>
+}

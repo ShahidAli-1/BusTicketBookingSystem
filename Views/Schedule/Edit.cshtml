@@ -1,0 +1,40 @@
+﻿@model BusTicketBookingSystem.Models.Schedule
+@{ ViewData["Title"] = "Edit Schedule"; }
+
+<h1>✏️ Edit Schedule</h1>
+
+<form asp-action="Edit" method="post" style="max-width: 600px;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="ScheduleID" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="BusID" class="form-label">Bus</label>
+        <select asp-for="BusID" asp-items="ViewBag.Buses" class="form-select"></select>
+    </div>
+    <div class="mb-3">
+        <label asp-for="TravelDate" class="form-label"></label>
+        <input asp-for="TravelDate" type="date" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="DepartureTime" class="form-label"></label>
+        <input asp-for="DepartureTime" type="time" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="ArrivalTime" class="form-label"></label>
+        <input asp-for="ArrivalTime" type="time" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Fare" class="form-label"></label>
+        <input asp-for="Fare" type="number" step="0.01" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Status" class="form-label"></label>
+        <select asp-for="Status" class="form-select">
+            <option>Active</option><option>Cancelled</option><option>Completed</option>
+        </select>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>

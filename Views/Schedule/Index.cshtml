@@ -1,0 +1,194 @@
+﻿@model List<BusTicketBookingSystem.Models.Schedule>
+@{
+    ViewData["Title"] = "Schedules";
+    var now = (DateTime)ViewBag.Now;
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>📅 Schedules</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Add Schedule</a>
+</div>
+
+@{
+    var currentStatus = ViewBag.Status as string ?? "Active";
+}
+
+@* ============ STATUS TABS ============ *@
+<ul class="nav nav-tabs mb-3">
+    <li class="nav-item">
+        <a class="nav-link @(currentStatus == "Active" ? "active" : "")"
+           asp-action="Index"
+           asp-route-status="Active">
+            🟢 Active
+            <span class="badge bg-success">@ViewBag.ActiveCount</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentStatus == "Completed" ? "active" : "")"
+           asp-action="Index"
+           asp-route-status="Completed">
+            ✅ Completed
+            <span class="badge bg-secondary">@ViewBag.CompletedCount</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentStatus == "Cancelled" ? "active" : "")"
+           asp-action="Index"
+           asp-route-status="Cancelled">
+            ❌ Cancelled
+            <span class="badge bg-danger">@ViewBag.CancelledCount</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link @(currentStatus == "All" ? "active" : "")"
+           asp-action="Index"
+           asp-route-status="All">
+            📋 All
+            <span class="badge bg-primary">@ViewBag.AllCount</span>
+        </a>
+    </li>
+</ul>
+
+@* ============ SEARCH BAR ============ *@
+<form method="get" class="card card-body shadow-sm mb-3 mt-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-3">
+            <label class="form-label small">Search</label>
+            <input name="search" class="form-control"
+                   placeholder="Bus or route name..."
+                   value="@ViewBag.Search" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Bus</label>
+            <select name="busId" asp-items="ViewBag.Buses" class="form-select">
+                <option value="">All Buses</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Route</label>
+            <select name="routeId" asp-items="ViewBag.Routes" class="form-select">
+                <option value="">All Routes</option>
+            </select>
+        </div>
+        @* <div class="col-md-2">
+            <label class="form-label small">Status</label>
+            <select name="status" class="form-select">
+                <option value="">All</option>
+                <option value="Active" selected="@(ViewBag.Status == "Active")">Active</option>
+                <option value="Completed" selected="@(ViewBag.Status == "Completed")">Completed</option>
+                <option value="Cancelled" selected="@(ViewBag.Status == "Cancelled")">Cancelled</option>
+            </select>
+        </div> *@
+        <div class="col-md-2">
+            <label class="form-label small">From Date</label>
+            <input name="fromDate" type="date" class="form-control"
+                   value="@ViewBag.FromDate" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">To Date</label>
+            <input name="toDate" type="date" class="form-control"
+                   value="@ViewBag.ToDate" />
+        </div>
+    </div>
+
+    <div class="mt-2 d-flex gap-2">
+        <button type="submit" class="btn btn-primary">🔍 Search</button>
+
+        @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string) ||
+             ViewBag.BusId != null ||
+             ViewBag.RouteId != null ||
+             !string.IsNullOrWhiteSpace(ViewBag.Status as string) ||
+             !string.IsNullOrWhiteSpace(ViewBag.FromDate as string) ||
+             !string.IsNullOrWhiteSpace(ViewBag.ToDate as string))
+        {
+            <a asp-action="Index" class="btn btn-outline-secondary">✕ Clear</a>
+        }
+    </div>
+</form>
+
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info mt-3">No schedules yet. Click "Add Schedule" to create one.</div>
+}
+else
+{
+    <table class="table table-striped mt-3">
+        <thead>
+            <tr>
+                <th>Bus</th>
+                <th>Route</th>
+                <th>Date</th>
+                <th>Departure</th>
+                <th>Arrival</th>
+                <th>Fare</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                var departureDateTime = s.TravelDate.Date + s.DepartureTime;
+                var isDeparted = departureDateTime <= now;
+
+                // Grey out departed rows
+                var rowClass = isDeparted ? "table-secondary" : "";
+                var opacity = isDeparted ? "opacity: 0.75;" : "";
+
+                <tr class="@rowClass" style="@opacity">
+                    <td>@s.Bus?.BusNumber</td>
+                    <td>@s.Bus?.Route?.RouteName</td>
+                    <td>@s.TravelDate.ToString("dd MMM yyyy")</td>
+                    <td>@s.DepartureTime</td>
+                    <td>@s.ArrivalTime</td>
+                    <td>Rs. @s.Fare.ToString("N0")</td>
+                    <td>
+                        @* Schedule status *@
+                        <span class="badge bg-@(s.Status switch {
+                            "Active" => "success",
+                            "Cancelled" => "danger",
+                            "Completed" => "dark",
+                            _ => "secondary"
+                        })">@s.Status</span>
+
+                        @* Departed indicator *@
+                        @if (isDeparted && s.Status == "Active")
+                        {
+                            <span class="badge bg-dark" title="Departure time has passed">
+                                ⏰ Departed
+                            </span>
+                        }
+                    </td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@s.ScheduleID"
+                           class="btn btn-sm btn-outline-info">View</a>
+
+                        @if (s.Status == "Active" && !isDeparted)
+                        {
+                            <a asp-action="Edit" asp-route-id="@s.ScheduleID"
+                               class="btn btn-sm btn-outline-primary">Edit</a>
+
+                            <form asp-action="Cancel" method="post" class="d-inline">
+                                @Html.AntiForgeryToken()
+                                <input type="hidden" name="id" value="@s.ScheduleID" />
+                                <button class="btn btn-sm btn-outline-danger"
+                                        onclick="return confirm('Cancel this schedule?')">
+                                    Cancel
+                                </button>
+                            </form>
+                        }
+                        else if (s.Status == "Completed" || s.Status == "Cancelled")
+                        {
+                            <a asp-action="Reschedule" asp-route-id="@s.ScheduleID"
+                               class="btn btn-sm btn-warning"
+                               title="Create a new schedule with different date/time">
+                                🔄 Reschedule
+                            </a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

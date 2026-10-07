@@ -1,0 +1,42 @@
+﻿@model BusTicketBookingSystem.Models.Route
+@{ ViewData["Title"] = "Edit Route"; }
+
+<h1>✏️ Edit Route</h1>
+
+<form asp-action="Edit" method="post" style="max-width: 600px;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="RouteID" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="RouteName" class="form-label"></label>
+        <input asp-for="RouteName" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Origin" class="form-label"></label>
+        <input asp-for="Origin" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="Destination" class="form-label"></label>
+        <input asp-for="Destination" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="DistanceKm" class="form-label"></label>
+        <input asp-for="DistanceKm" type="number" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="EstimatedDuration" class="form-label"></label>
+        <input asp-for="EstimatedDuration" class="form-control" />
+    </div>
+    <div class="form-check mb-3">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label">Active</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

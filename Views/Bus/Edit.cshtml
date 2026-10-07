@@ -1,0 +1,53 @@
+﻿@model BusTicketBookingSystem.Models.Bus
+@{ ViewData["Title"] = "Edit Bus"; }
+
+<h1>✏️ Edit Bus</h1>
+
+<form asp-action="Edit" method="post" style="max-width: 600px;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="BusID" />
+    <input type="hidden" asp-for="CreatedAt" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="BusNumber" class="form-label"></label>
+        <input asp-for="BusNumber" class="form-control" />
+        <span asp-validation-for="BusNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BusName" class="form-label"></label>
+        <input asp-for="BusName" class="form-control" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BusType" class="form-label"></label>
+        <select asp-for="BusType" class="form-select">
+            <option value="Standard">Standard</option>
+            <option value="Executive">Executive</option>
+            <option value="Business">Business</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TotalSeats" class="form-label"></label>
+        <input asp-for="TotalSeats" type="number" class="form-control" min="1" max="100" />
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RouteID" class="form-label">Route</label>
+        <select asp-for="RouteID" asp-items="ViewBag.Routes" class="form-select"></select>
+    </div>
+
+    <div class="mb-3 form-check">
+        <input asp-for="IsActive" class="form-check-input" />
+        <label asp-for="IsActive" class="form-check-label">Active</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Update</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

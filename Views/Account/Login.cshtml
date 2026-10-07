@@ -1,0 +1,64 @@
+﻿@model BusTicketBookingSystem.ViewModels.LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-5">
+            <div class="card shadow">
+                <div class="card-body p-4">
+                    <h2 class="text-center mb-4">🚌 Login</h2>
+
+                    @if (TempData["Message"] != null)
+                    {
+                        <div class="alert alert-info">@TempData["Message"]</div>
+                    }
+
+                    @if (TempData["TempPassword"] != null)
+                    {
+                        <div class="alert alert-warning">
+                            <strong>Your temporary password:</strong>
+                            <code class="fs-5">@TempData["TempPassword"]</code>
+                        </div>
+                    }
+
+                    <form asp-action="Login" method="post">
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" type="email" class="form-control" placeholder="you@example.com" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" type="password" class="form-control" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">Login</button>
+                    </form>
+
+                    <hr />
+                    <p class="text-center">
+                        New here? <a asp-action="Register">Register as Passenger</a>
+                    </p>
+
+                    <p class="text-center mb-0">
+                        <a asp-action="ForgotPassword">🔑 Forgot Password?</a>
+                    </p>
+
+                    @* <div class="alert alert-secondary mt-3 small">
+                        <strong>Default Admin:</strong> admin@bus.com / Admin@123
+                    </div> *@
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

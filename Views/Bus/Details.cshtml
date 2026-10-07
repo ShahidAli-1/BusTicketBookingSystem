@@ -1,0 +1,13 @@
+﻿@model BusTicketBookingSystem.Models.Bus
+@{ ViewData["Title"] = "Bus Details"; }
+
+<h1>🚌 @Model.BusName</h1>
+<dl class="row">
+    <dt class="col-sm-3">Bus Number</dt><dd class="col-sm-9">@Model.BusNumber</dd>
+    <dt class="col-sm-3">Type</dt><dd class="col-sm-9">@Model.BusType</dd>
+    <dt class="col-sm-3">Total Seats</dt><dd class="col-sm-9">@Model.TotalSeats</dd>
+    <dt class="col-sm-3">Route</dt><dd class="col-sm-9">@Model.Route?.RouteName</dd>
+    <dt class="col-sm-3">Status</dt><dd class="col-sm-9">@(Model.IsActive ? "Active" : "Inactive")</dd>
+    <dt class="col-sm-3">Registered</dt><dd class="col-sm-9">@Model.CreatedAt.ToString("dd MMM yyyy")</dd>
+</dl>
+<a asp-action="Index" class="btn btn-secondary">Back</a>

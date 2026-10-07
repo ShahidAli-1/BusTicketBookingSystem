@@ -1,0 +1,43 @@
+﻿@model BusTicketBookingSystem.Models.Booking
+@{ ViewData["Title"] = "Booking Details"; }
+
+<h1>📋 Booking Details</h1>
+
+<dl class="row">
+    <dt class="col-sm-3">Booking #</dt><dd class="col-sm-9">@Model.BookingNumber</dd>
+    <dt class="col-sm-3">Passenger</dt><dd class="col-sm-9">@Model.Passenger?.FullName</dd>
+    <dt class="col-sm-3">Route</dt><dd class="col-sm-9">@Model.Schedule?.Bus?.Route?.Origin → @Model.Schedule?.Bus?.Route?.Destination</dd>
+    <dt class="col-sm-3">Travel Date</dt><dd class="col-sm-9">@Model.Schedule?.TravelDate.ToString("dd MMM yyyy")</dd>
+    <dt class="col-sm-3">Seats</dt>
+<dd class="col-sm-9">
+    <strong>@Model.SeatNumbersDisplay</strong>
+    @if (Model.SeatCount > 1)
+    {
+        <span class="badge bg-info ms-2">@Model.SeatCount seats</span>
+    }
+</dd>
+    <dt class="col-sm-3">Fare</dt><dd class="col-sm-9">Rs. @Model.Fare.ToString("N0")</dd>
+    <dt class="col-sm-3">Status</dt><dd class="col-sm-9"><span class="badge bg-info">@Model.Status</span></dd>
+    @if (Model.ExpiresAt.HasValue && Model.Status == "Reserved")
+    {
+        <dt class="col-sm-3">Expires At</dt><dd class="col-sm-9">@Model.ExpiresAt.Value.ToString("HH:mm:ss")</dd>
+    }
+</dl>
+
+@if (Model.Status == "Reserved")
+{
+    <a asp-controller="Payment" asp-action="Request" asp-route-bookingId="@Model.BookingID" class="btn btn-success">💳 Submit Payment</a>
+}
+@if (Model.Status == "Confirmed")
+{
+    <a asp-controller="Ticket" asp-action="Print" asp-route-id="@Model.BookingID" class="btn btn-success">🖨️ Print Ticket</a>
+}
+@if (Model.Status == "Reserved" || Model.Status == "PendingApproval")
+{
+    <form asp-action="Cancel" method="post" class="d-inline">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="id" value="@Model.BookingID" />
+        <button class="btn btn-danger" onclick="return confirm('Cancel this booking?')">Cancel Booking</button>
+    </form>
+}
+<a asp-controller="Passenger" asp-action="BookingHistory" class="btn btn-secondary">Back</a>

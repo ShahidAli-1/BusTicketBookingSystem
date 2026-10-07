@@ -1,0 +1,19 @@
+﻿@model BusTicketBookingSystem.Models.Route
+@{ ViewData["Title"] = "Route Details"; }
+
+<h1>🗺️ @Model.RouteName</h1>
+<dl class="row">
+    <dt class="col-sm-3">Origin</dt><dd class="col-sm-9">@Model.Origin</dd>
+    <dt class="col-sm-3">Destination</dt><dd class="col-sm-9">@Model.Destination</dd>
+    <dt class="col-sm-3">Distance</dt><dd class="col-sm-9">@Model.DistanceKm km</dd>
+    <dt class="col-sm-3">Duration</dt><dd class="col-sm-9">@Model.EstimatedDuration</dd>
+    <dt class="col-sm-3">Buses</dt>
+    <dd class="col-sm-9">
+        @if (Model.Buses?.Any() == true)
+        {
+            <ul>@foreach (var b in Model.Buses) { <li>@b.BusNumber - @b.BusName</li> }</ul>
+        }
+        else { <em>No buses assigned.</em> }
+    </dd>
+</dl>
+<a asp-action="Index" class="btn btn-secondary">Back</a>

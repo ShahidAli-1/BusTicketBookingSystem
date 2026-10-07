@@ -1,0 +1,40 @@
+﻿@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="text-center mt-5">
+    <h1 class="display-4">🚌 Bus Ticket Booking System</h1>
+    <p class="lead">Book bus tickets online. Reserve seats. Print tickets.</p>
+
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h3>@ViewBag.TotalBuses</h3>
+                    <p>Active Buses</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h3>@ViewBag.TotalRoutes</h3>
+                    <p>Routes</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center shadow-sm">
+                <div class="card-body">
+                    <h3>@ViewBag.TotalSchedules</h3>
+                    <p>Active Schedules</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="mt-5">
+        <a asp-controller="Account" asp-action="Register" class="btn btn-primary btn-lg me-2">Register</a>
+        <a asp-controller="Account" asp-action="Login" class="btn btn-outline-primary btn-lg">Login</a>
+    </div>
+</div>

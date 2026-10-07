@@ -1,0 +1,40 @@
+﻿@model BusTicketBookingSystem.ViewModels.PaymentRequestViewModel
+@{ ViewData["Title"] = "Submit Payment"; }
+
+<h1>💳 Submit Payment Request</h1>
+
+<div class="alert alert-info">
+    <strong>Booking #:</strong> @Model.BookingNumber<br />
+    <strong>Amount:</strong> Rs. @Model.Amount.ToString("N0")
+</div>
+
+<form asp-action="Request" method="post" style="max-width: 500px;">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="BookingId" />
+    <input type="hidden" asp-for="Amount" />
+    <input type="hidden" asp-for="BookingNumber" />
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="PaymentMethod" class="form-label"></label>
+        <select asp-for="PaymentMethod" class="form-select">
+            <option value="">-- Select --</option>
+            <option>Bank Transfer</option>
+            <option>JazzCash</option>
+            <option>EasyPaisa</option>
+            <option>Cash</option>
+        </select>
+        <span asp-validation-for="PaymentMethod" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="PaymentReference" class="form-label"></label>
+        <input asp-for="PaymentReference" class="form-control" placeholder="Transaction ID (optional)" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit Request</button>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

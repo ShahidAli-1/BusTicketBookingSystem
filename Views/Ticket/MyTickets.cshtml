@@ -1,0 +1,38 @@
+﻿@model List<BusTicketBookingSystem.Models.Booking>
+@{ ViewData["Title"] = "My Tickets"; }
+
+<h1>🎫 My Tickets</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No confirmed tickets yet.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Ticket #</th><th>Route</th><th>Travel Date</th><th>Seat</th><th>Fare</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td>@b.TicketNumber</td>
+                    <td>@b.Schedule?.Bus?.Route?.Origin → @b.Schedule?.Bus?.Route?.Destination</td>
+                    <td>@b.Schedule?.TravelDate.ToString("dd MMM yyyy")</td>
+                    <td>@b.BusSeat?.SeatNumber</td>
+                    <td>Rs. @b.Fare.ToString("N0")</td>
+                    <td>
+                        <a asp-action="Details" asp-route-id="@b.BookingID" class="btn btn-sm btn-outline-primary">View</a>
+
+                        <a asp-action="Print" asp-route-id="@b.BookingID"
+                             target="_blank"
+                              class="btn btn-sm btn-success">
+                               📄 Print / Download
+</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

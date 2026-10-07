@@ -1,0 +1,346 @@
+﻿.bus-container {
+    max-width: 500px;
+    margin: 20px auto;
+    padding: 20px 25px 25px;
+    background: #ffffff;
+    border: 3px solid #343a40;
+    border-radius: 30px 30px 20px 20px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+
+.driver-area {
+    position: relative;
+    height: 55px;
+    margin-bottom: 10px;
+}
+
+.driver-slot {
+    position: absolute;
+    right: 95px; 
+    top: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.driver-label {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 600;
+}
+
+.steering {
+    width: 48px;
+    height: 48px;
+}
+
+    .steering svg {
+        width: 100%;
+        height: 100%;
+    }
+
+
+.bus-rows {
+    display: flex;
+    flex-direction: column;
+    gap: 14px; 
+    padding: 5px 0;
+}
+
+.seat-row {
+    display: flex;
+    flex-direction: row-reverse; 
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
+    /* Last row — 5 seats, right-aligned, SAME spacing as other rows */
+    .seat-row.last-row {
+        justify-content: center;
+        padding-right: 0px;
+        gap: 6px;
+        margin-top: 0;
+        padding-top: 0;
+    }
+
+        .seat-row.last-row .seat {
+            transform: scale(0.92);
+        }
+
+.aisle-spacer {
+    width: 30px;
+    height: 1px;
+    flex-shrink: 0;
+}
+
+
+.seat {
+    width: 55px;
+    height: 60px;
+    position: relative;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    padding-bottom: 8px;
+    cursor: pointer;
+    user-select: none;
+    transition: transform 0.15s ease-in-out;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
+    /* Headrest */
+    .seat::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 24px;
+        height: 10px;
+        border-radius: 6px 6px 0 0;
+        border: 2px solid #adb5bd;
+        border-bottom: none;
+        background: #ffffff;
+        z-index: 1;
+    }
+
+    /* Main cushion */
+    .seat::after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 55px;
+        height: 42px;
+        border: 2px solid #adb5bd;
+        border-radius: 8px 8px 10px 10px;
+        background: #ffffff;
+        z-index: 0;
+    }
+
+.seat-number {
+    position: relative;
+    z-index: 2;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 1;
+    color: #495057;
+}
+
+
+/* Available */
+.seat.available::before,
+.seat.available::after {
+    background: #ffffff;
+    border-color: #adb5bd;
+}
+
+.seat.available .seat-number {
+    color: #495057;
+}
+
+.seat.available:hover {
+    transform: translateY(-3px);
+}
+
+    .seat.available:hover::before,
+    .seat.available:hover::after {
+        border-color: #28a745;
+        background: #f0fff4;
+    }
+
+    .seat.available:hover .seat-number {
+        color: #28a745;
+    }
+
+/* Selected */
+.seat.selected {
+    transform: translateY(-3px);
+}
+
+    .seat.selected::before,
+    .seat.selected::after {
+        background: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .seat.selected .seat-number {
+        color: #ffffff;
+    }
+
+/* Reserved */
+.seat.reserved {
+    cursor: not-allowed;
+}
+
+    .seat.reserved::before,
+    .seat.reserved::after {
+        background: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .seat.reserved .seat-number {
+        color: #212529;
+    }
+
+/* Booked */
+.seat.booked {
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+    .seat.booked::before,
+    .seat.booked::after {
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .seat.booked .seat-number {
+        color: #ffffff;
+    }
+
+/* Disabled (beyond bus capacity) */
+.seat.disabled {
+    cursor: not-allowed;
+    opacity: 0.35;
+}
+
+    .seat.disabled::before,
+    .seat.disabled::after {
+        background: #e9ecef;
+        border-color: #ced4da;
+        border-style: dashed;
+    }
+
+    .seat.disabled .seat-number {
+        color: #adb5bd;
+        text-decoration: line-through;
+    }
+
+.legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 13px;
+    color: #495057;
+}
+
+    .legend > span {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+    }
+
+.legend-box {
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 2px solid #adb5bd;
+}
+
+    .legend-box.available {
+        background: #ffffff;
+        border-color: #adb5bd;
+    }
+
+    .legend-box.selected {
+        background: #0d6efd;
+        border-color: #0d6efd;
+    }
+
+    .legend-box.reserved {
+        background: #ffc107;
+        border-color: #ffc107;
+    }
+
+    .legend-box.booked {
+        background: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .legend-box.disabled {
+        background: #e9ecef;
+        border-color: #ced4da;
+        border-style: dashed;
+    }
+
+
+.sticky-summary {
+    position: sticky;
+    top: 20px;
+}
+
+
+@media (max-width: 576px) {
+    .bus-container {
+        max-width: 100%;
+        padding: 15px 10px;
+    }
+
+    .driver-slot {
+        right: 75px;
+    }
+
+    .seat-row {
+        gap: 6px;
+    }
+
+    .aisle-spacer {
+        width: 15px;
+    }
+
+    .seat {
+        width: 45px;
+        height: 52px;
+    }
+
+        .seat::before {
+            width: 20px;
+            height: 8px;
+        }
+
+        .seat::after {
+            width: 45px;
+            height: 36px;
+        }
+
+    .seat-number {
+        font-size: 12px;
+    }
+
+    .seat-row.last-row {
+        gap: 3px;
+        padding-right: 5px;
+    }
+
+        .seat-row.last-row .seat {
+            width: 40px;
+            transform: scale(0.9);
+        }
+}
+
+
+/*   CLICKABLE STAT CARDS
+*/
+.stat-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    cursor: pointer;
+}
+
+    .stat-card:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    }
+
+    .stat-card small {
+        display: block;
+        margin-top: 8px;
+        opacity: 0.85;
+        font-weight: 500;
+    }

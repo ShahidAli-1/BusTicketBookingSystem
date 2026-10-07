@@ -1,0 +1,201 @@
+﻿@model List<BusTicketBookingSystem.Models.Booking>
+@{
+    ViewData["Title"] = "My Bookings";
+}
+
+<h1>📋 My Bookings</h1>
+
+@* ============ MINI STATS ============ *@
+<div class="row mt-3 mb-4">
+    <div class="col-md-3 col-6 mb-2">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-2">
+                <small class="text-muted">Total</small>
+                <h5 class="mb-0">@ViewBag.TotalCount</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-2">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-2">
+                <small class="text-muted">Confirmed</small>
+                <h5 class="mb-0 text-success">@ViewBag.ConfirmedCount</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-2">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-2">
+                <small class="text-muted">Pending</small>
+                <h5 class="mb-0 text-warning">@ViewBag.PendingCount</h5>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3 col-6 mb-2">
+        <div class="card text-center border-0 shadow-sm">
+            <div class="card-body py-2">
+                <small class="text-muted">Cancelled</small>
+                <h5 class="mb-0 text-secondary">@ViewBag.CancelledOrRejectedCount</h5>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* ============ FILTER BAR ============ *@
+<form method="get" class="card card-body shadow-sm mb-4">
+    <div class="row g-2 align-items-end">
+
+        <div class="col-md-4">
+            <label class="form-label small">Search</label>
+            <input name="search" class="form-control"
+                   placeholder="Booking #, route, or city..."
+                   value="@ViewBag.Search" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label small">Status</label>
+            <select name="status" class="form-select">
+                <option value="">All</option>
+                <option value="Reserved" selected="@(ViewBag.Status == "Reserved")">Reserved</option>
+                <option value="PendingApproval" selected="@(ViewBag.Status == "PendingApproval")">Pending</option>
+                <option value="Confirmed" selected="@(ViewBag.Status == "Confirmed")">Confirmed</option>
+                <option value="Rejected" selected="@(ViewBag.Status == "Rejected")">Rejected</option>
+                <option value="Cancelled" selected="@(ViewBag.Status == "Cancelled")">Cancelled</option>
+                <option value="Expired" selected="@(ViewBag.Status == "Expired")">Expired</option>
+            </select>
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label small">From Date</label>
+            <input name="fromDate" type="date" class="form-control"
+                   value="@ViewBag.FromDate" />
+        </div>
+
+        <div class="col-md-2">
+            <label class="form-label small">To Date</label>
+            <input name="toDate" type="date" class="form-control"
+                   value="@ViewBag.ToDate" />
+        </div>
+
+        <div class="col-md-2">
+            <div class="d-flex gap-1">
+                <button type="submit" class="btn btn-primary flex-grow-1">🔍</button>
+
+                @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string) ||
+                     !string.IsNullOrWhiteSpace(ViewBag.Status as string) ||
+                     !string.IsNullOrWhiteSpace(ViewBag.FromDate as string) ||
+                     !string.IsNullOrWhiteSpace(ViewBag.ToDate as string))
+                {
+                    <a asp-action="BookingHistory" class="btn btn-outline-secondary">✕</a>
+                }
+            </div>
+        </div>
+
+    </div>
+</form>
+
+@* ============ RESULTS COUNT ============ *@
+<p class="text-muted small">
+    Showing <strong>@Model.Count</strong> booking(s)
+    @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string) ||
+         !string.IsNullOrWhiteSpace(ViewBag.Status as string) ||
+         !string.IsNullOrWhiteSpace(ViewBag.FromDate as string) ||
+         !string.IsNullOrWhiteSpace(ViewBag.ToDate as string))
+    {
+        <span>(filtered)</span>
+    }
+</p>
+
+@* ============ BOOKINGS TABLE ============ *@
+@if (!Model.Any())
+{
+    <div class="alert alert-info">
+        <h5>No bookings found</h5>
+        <p class="mb-2">
+            @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string) ||
+                 !string.IsNullOrWhiteSpace(ViewBag.Status as string))
+            {
+                <span>Try clearing the filters.</span>
+                <a asp-action="BookingHistory" class="btn btn-sm btn-outline-primary ms-2">Clear Filters</a>
+            }
+            else
+            {
+                <span>You have no bookings yet. Start by searching for buses!</span>
+                <a asp-controller="Booking" asp-action="Search" class="btn btn-sm btn-primary ms-2">
+                    🔍 Search Buses
+                </a>
+            }
+        </p>
+    </div>
+}
+else
+{
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Booking #</th>
+                    <th>Route</th>
+                    <th>Travel Date</th>
+                    <th>Seats</th>
+                    <th>Fare</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var b in Model)
+                {
+                    <tr>
+                        <td><small class="text-muted">@b.BookingNumber</small></td>
+
+                        <td>
+                            <strong>@b.Schedule?.Bus?.Route?.Origin</strong>
+                            →
+                            <strong>@b.Schedule?.Bus?.Route?.Destination</strong>
+                        </td>
+
+                        <td>@b.Schedule?.TravelDate.ToString("dd MMM yyyy")</td>
+
+                        <td>
+                            <span class="badge bg-light text-dark border">
+                                @b.SeatNumbersDisplay
+                            </span>
+                        </td>
+
+                        <td>Rs. @b.Fare.ToString("N0")</td>
+
+                        <td>
+                            <span class="badge bg-@(b.Status switch {
+                                "Confirmed" => "success",
+                                "PendingApproval" => "warning",
+                                "Reserved" => "info",
+                                "Rejected" => "danger",
+                                "Cancelled" => "secondary",
+                                "Expired" => "dark",
+                                _ => "secondary"
+                            })">@b.Status</span>
+                        </td>
+
+                        <td>
+                            <a asp-controller="Booking" asp-action="Details"
+                               asp-route-id="@b.BookingID"
+                               class="btn btn-sm btn-outline-primary">Details</a>
+
+                            @if (b.Status == "Confirmed")
+                            {
+                                <a asp-controller="Ticket" asp-action="Print"
+                                   asp-route-id="@b.BookingID"
+                                   asp-route-auto="1"
+                                   target="_blank"
+                                   class="btn btn-sm btn-success">
+                                    📄 Print / Download
+                                </a>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}

@@ -1,0 +1,167 @@
+﻿@model List<BusTicketBookingSystem.Models.Booking>
+@{
+    ViewData["Title"] = "Admin Dashboard";
+}
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>📊 Admin Dashboard</h1>
+   @*  <form asp-action="RunMaintenance" method="post" class="d-inline">
+        @Html.AntiForgeryToken()
+        <button type="submit" class="btn btn-outline-secondary btn-sm"
+                onclick="return confirm('Run maintenance? This will expire stale reservations and complete departed schedules.')">
+            🔄 Run Maintenance
+        </button>
+    </form> *@
+</div>
+
+<div class="row mt-4">
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Bus" asp-action="Index" class="text-decoration-none">
+            <div class="card text-white bg-primary h-100 stat-card">
+                <div class="card-body">
+                    <h6>Total Buses</h6>
+                    <h2>@ViewBag.TotalBuses</h2>
+                    <small>View all →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Route" asp-action="Index" class="text-decoration-none">
+            <div class="card text-white bg-success h-100 stat-card">
+                <div class="card-body">
+                    <h6>Total Routes</h6>
+                    <h2>@ViewBag.TotalRoutes</h2>
+                    <small>View all →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+    <div class="col-md-3 mb-3">
+
+        <a asp-controller="Admin" asp-action="Passengers" class="text-decoration-none">
+            <div class="card text-white bg-info h-100 stat-card">
+                <div class="card-body">
+                    <h6>Passengers</h6>
+                    <h2>@ViewBag.TotalPassengers</h2>
+                    <small>View all →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Payment" asp-action="Pending" class="text-decoration-none">
+            <div class="card text-white bg-warning h-100 stat-card">
+                <div class="card-body">
+                    <h6>Pending Requests</h6>
+                    <h2>@ViewBag.PendingRequests</h2>
+                    <small>Review now →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+<div class="row">
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Schedule" asp-action="Index"
+           asp-route-status="Active"
+           class="text-decoration-none">
+            <div class="card h-100 stat-card">
+                <div class="card-body">
+                    <h6>Active Schedules</h6>
+                    <h2 class="text-success">@ViewBag.TotalSchedules</h2>
+                    <small>View →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Schedule" asp-action="Index"
+           asp-route-status="Completed"
+           class="text-decoration-none">
+            <div class="card h-100 stat-card">
+                <div class="card-body">
+                    <h6>Completed Schedules</h6>
+                    <h2 class="text-secondary">@ViewBag.CompletedSchedules</h2>
+                    <small>View →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Admin" asp-action="Reports"
+           class="text-decoration-none">
+            <div class="card h-100 stat-card">
+                <div class="card-body">
+                    <h6>Confirmed Bookings</h6>
+                    <h2 class="text-success">@ViewBag.ConfirmedBookings</h2>
+                    <small>View reports →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Admin" asp-action="Reports"
+           class="text-decoration-none">
+            <div class="card h-100 stat-card">
+                <div class="card-body">
+                    <h6>Total Revenue</h6>
+                    <h2 class="text-primary">Rs. @ViewBag.TotalRevenue.ToString("N0")</h2>
+                    <small>View reports →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+    </div>
+</div>
+
+<h3 class="mt-4">Recent Bookings</h3>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No bookings yet.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Booking #</th>
+                <th>Passenger</th>
+                <th>Route</th>
+                <th>Travel Date</th>
+                <th>Fare</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var b in Model)
+            {
+                <tr>
+                    <td>@b.BookingNumber</td>
+                    <td>@b.Passenger?.FullName</td>
+                    <td>@b.Schedule?.Bus?.Route?.Origin → @b.Schedule?.Bus?.Route?.Destination</td>
+                    <td>@b.Schedule?.TravelDate.ToString("dd MMM yyyy")</td>
+                    <td>Rs. @b.Fare.ToString("N0")</td>
+                    <td>
+                        <span class="badge bg-@(b.Status switch {
+                            "Confirmed" => "success",
+                            "PendingApproval" => "warning",
+                            "Rejected" => "danger",
+                            "Cancelled" => "secondary",
+                            "Expired" => "dark",
+                            _ => "info"
+                        })">@b.Status</span>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

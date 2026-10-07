@@ -1,0 +1,48 @@
+﻿@model List<BusTicketBookingSystem.Models.Schedule>
+@{ ViewData["Title"] = "Search Buses"; }
+
+<h1>🔍 Search Buses</h1>
+
+<form method="get" class="row g-2 mb-4">
+    <div class="col-md-3">
+        <input name="origin" class="form-control" placeholder="Origin" value="@ViewBag.Origin" />
+    </div>
+    <div class="col-md-3">
+        <input name="destination" class="form-control" placeholder="Destination" value="@ViewBag.Destination" />
+    </div>
+    <div class="col-md-3">
+        <input name="date" type="date" class="form-control" value="@ViewBag.Date" />
+    </div>
+    <div class="col-md-3">
+        <button class="btn btn-primary w-100">Search</button>
+    </div>
+</form>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No schedules found. Try different criteria.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Bus</th><th>Route</th><th>Date</th><th>Departure</th><th>Arrival</th><th>Fare</th><th>Action</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var s in Model)
+            {
+                <tr>
+                    <td>@s.Bus?.BusName</td>
+                    <td>@s.Bus?.Route?.Origin → @s.Bus?.Route?.Destination</td>
+                    <td>@s.TravelDate.ToString("dd MMM yyyy")</td>
+                    <td>@s.DepartureTime</td>
+                    <td>@s.ArrivalTime</td>
+                    <td>Rs. @s.Fare.ToString("N0")</td>
+                    <td>
+                        <a asp-action="Seats" asp-route-id="@s.ScheduleID" class="btn btn-sm btn-primary">Select Seats</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

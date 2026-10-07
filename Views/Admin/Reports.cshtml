@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "Reports";
+}
+
+<h1>📈 Reports</h1>
+
+<div class="row mt-4">
+    <div class="col-md-3 mb-3">
+        <div class="card"><div class="card-body">
+            <h6>Total Bookings</h6>
+            <h2>@ViewBag.TotalBookings</h2>
+        </div></div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card"><div class="card-body">
+            <h6>Confirmed</h6>
+            <h2 class="text-success">@ViewBag.ConfirmedBookings</h2>
+        </div></div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card"><div class="card-body">
+            <h6>Cancelled</h6>
+            <h2 class="text-secondary">@ViewBag.CancelledBookings</h2>
+        </div></div>
+    </div>
+    <div class="col-md-3 mb-3">
+        <div class="card"><div class="card-body">
+            <h6>Rejected</h6>
+            <h2 class="text-danger">@ViewBag.RejectedBookings</h2>
+        </div></div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card"><div class="card-body">
+            <h6>Active Schedules</h6>
+            <h2 class="text-success">@ViewBag.ActiveSchedules</h2>
+        </div></div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card"><div class="card-body">
+            <h6>Completed Schedules</h6>
+            <h2 class="text-secondary">@ViewBag.CompletedSchedules</h2>
+        </div></div>
+    </div>
+</div>
+
+<div class="card mt-3">
+    <div class="card-body">
+        <h6>Total Revenue</h6>
+        <h2 class="text-primary">Rs. @ViewBag.TotalRevenue.ToString("N0")</h2>
+    </div>
+</div>
+
+<h3 class="mt-4">Bookings by Status</h3>
+<table class="table table-striped">
+    <thead>
+        <tr><th>Status</th><th>Count</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.BookingsByStatus)
+        {
+            <tr>
+                <td>@item.Status</td>
+                <td>@item.Count</td>
+            </tr>
+        }
+    </tbody>
+</table>

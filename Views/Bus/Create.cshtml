@@ -1,0 +1,51 @@
+﻿@model BusTicketBookingSystem.Models.Bus
+@{ ViewData["Title"] = "Register Bus"; }
+
+<h1>🚌 Register Bus</h1>
+
+<form asp-action="Create" method="post" style="max-width: 600px;">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="BusNumber" class="form-label"></label>
+        <input asp-for="BusNumber" class="form-control" />
+        <span asp-validation-for="BusNumber" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BusName" class="form-label"></label>
+        <input asp-for="BusName" class="form-control" />
+        <span asp-validation-for="BusName" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="BusType" class="form-label"></label>
+        <select asp-for="BusType" class="form-select">
+            <option value="Standard">Standard</option>
+            <option value="Executive">Executive</option>
+            <option value="Business">Business</option>
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="TotalSeats" class="form-label"></label>
+        <input asp-for="TotalSeats" type="number" class="form-control" min="1" max="100" />
+        <span asp-validation-for="TotalSeats" class="text-danger"></span>
+    </div>
+
+    <div class="mb-3">
+        <label asp-for="RouteID" class="form-label">Assigned Route</label>
+        <select asp-for="RouteID" asp-items="ViewBag.Routes" class="form-select">
+            <option value="">-- Select Route --</option>
+        </select>
+        <span asp-validation-for="RouteID" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

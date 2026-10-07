@@ -1,0 +1,42 @@
+﻿@model BusTicketBookingSystem.Models.Schedule
+@{ ViewData["Title"] = "Create Schedule"; }
+
+<h1>📅 Create Schedule</h1>
+
+<form asp-action="Create" method="post" style="max-width: 600px;">
+    @Html.AntiForgeryToken()
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+    <div class="mb-3">
+        <label asp-for="BusID" class="form-label">Bus</label>
+        <select asp-for="BusID" asp-items="ViewBag.Buses" class="form-select">
+            <option value="">-- Select Bus --</option>
+        </select>
+        <span asp-validation-for="BusID" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="TravelDate" class="form-label"></label>
+        <input asp-for="TravelDate" type="date" class="form-control" />
+        <span asp-validation-for="TravelDate" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="DepartureTime" class="form-label"></label>
+        <input asp-for="DepartureTime" type="time" class="form-control" />
+    </div>
+    <div class="mb-3">
+        <label asp-for="ArrivalTime" class="form-label"></label>
+        <input asp-for="ArrivalTime" type="time" class="form-control" />
+        <span asp-validation-for="ArrivalTime" class="text-danger"></span>
+    </div>
+    <div class="mb-3">
+        <label asp-for="Fare" class="form-label"></label>
+        <input asp-for="Fare" type="number" step="0.01" class="form-control" />
+    </div>
+
+    <button type="submit" class="btn btn-primary">Create (Auto-generate seats)</button>
+    <a asp-action="Index" class="btn btn-secondary">Cancel</a>
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

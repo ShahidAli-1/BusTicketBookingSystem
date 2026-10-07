@@ -1,0 +1,45 @@
+﻿@model BusTicketBookingSystem.Models.Booking
+@{ ViewData["Title"] = "Ticket"; }
+
+<div class="card mx-auto" style="max-width: 600px;">
+    <div class="card-header bg-success text-white text-center">
+        <h2>🎫 BUS TICKET - CONFIRMED</h2>
+    </div>
+    <div class="card-body">
+        <table class="table">
+            <tr><th>Ticket #</th><td>@Model.TicketNumber</td></tr>
+            <tr><th>Booking #</th><td>@Model.BookingNumber</td></tr>
+            <tr><th>Passenger</th><td>@Model.Passenger?.FullName</td></tr>
+            <tr><th>Route</th><td>@Model.Schedule?.Bus?.Route?.Origin → @Model.Schedule?.Bus?.Route?.Destination</td></tr>
+            <tr><th>Bus</th><td>@Model.Schedule?.Bus?.BusNumber</td></tr>
+            <tr><th>Travel Date</th><td>@Model.Schedule?.TravelDate.ToString("dd MMM yyyy")</td></tr>
+            <tr><th>Departure</th><td>@Model.Schedule?.DepartureTime</td></tr>
+          <tr>
+    <th>Seat@(Model.SeatCount > 1 ? "s" : "")</th>
+    <td>
+        <strong>@Model.SeatNumbersDisplay</strong>
+        @if (Model.SeatCount > 1)
+        {
+            <span class="badge bg-info ms-2">@Model.SeatCount seats</span>
+        }
+    </td>
+</tr>
+            <tr><th>Fare</th><td>Rs. @Model.Fare.ToString("N0")</td></tr>
+        </table>
+    </div>
+   <div class="card-footer text-center d-flex justify-content-center gap-2">
+    <a asp-action="Print" asp-route-id="@Model.BookingID"
+       target="_blank"
+       class="btn btn-outline-primary">
+        🖨️ Open Print View
+    </a>
+
+    <a asp-action="Print" asp-route-id="@Model.BookingID"
+       asp-route-auto="1"
+       target="_blank"
+       class="btn btn-success">
+        📥 Download as PDF
+    </a>
+</div>
+    </div>
+</div>

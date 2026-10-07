@@ -1,0 +1,86 @@
+﻿@model List<BusTicketBookingSystem.Models.Route>
+@{ ViewData["Title"] = "Routes"; }
+
+<div class="d-flex justify-content-between align-items-center">
+    <h1>🗺️ Routes</h1>
+    <a asp-action="Create" class="btn btn-primary">+ Add Route</a>
+</div>
+
+@* ============ SEARCH BAR ============ *@
+<form method="get" class="card card-body shadow-sm mb-3 mt-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-4">
+            <label class="form-label small">Search</label>
+            <input name="search" class="form-control"
+                   placeholder="Route name, origin, or destination..."
+                   value="@ViewBag.Search" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Origin</label>
+            <input name="origin" class="form-control"
+                   placeholder="e.g. Multan"
+                   value="@ViewBag.Origin" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Destination</label>
+            <input name="destination" class="form-control"
+                   placeholder="e.g. Lahore"
+                   value="@ViewBag.Destination" />
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Status</label>
+            <select name="status" class="form-select">
+                <option value="">All</option>
+                <option value="Active" selected="@(ViewBag.Status == "Active")">Active</option>
+                <option value="Inactive" selected="@(ViewBag.Status == "Inactive")">Inactive</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">🔍 Search</button>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string) ||
+         !string.IsNullOrWhiteSpace(ViewBag.Origin as string) ||
+         !string.IsNullOrWhiteSpace(ViewBag.Destination as string) ||
+         !string.IsNullOrWhiteSpace(ViewBag.Status as string))
+    {
+        <div class="mt-2">
+            <a asp-action="Index" class="btn btn-sm btn-outline-secondary">
+                ✕ Clear filters
+            </a>
+        </div>
+    }
+</form>
+
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr><th>Name</th><th>Origin</th><th>Destination</th><th>Distance</th><th>Duration</th><th>Buses</th><th>Status</th><th>Actions</th></tr>
+    </thead>
+    <tbody>
+        @foreach (var r in Model)
+        {
+            <tr>
+                <td>@r.RouteName</td>
+                <td>@r.Origin</td>
+                <td>@r.Destination</td>
+                <td>@r.DistanceKm km</td>
+                <td>@r.EstimatedDuration</td>
+                <td>@(r.Buses?.Count ?? 0)</td>
+                <td><span class="badge bg-@(r.IsActive ? "success" : "danger")">@(r.IsActive ? "Active" : "Inactive")</span></td>
+                <td>
+                    <a asp-action="Details" asp-route-id="@r.RouteID" class="btn btn-sm btn-outline-info">View</a>
+                    <a asp-action="Edit" asp-route-id="@r.RouteID" class="btn btn-sm btn-outline-primary">Edit</a>
+                    <form asp-action="ToggleActive" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@r.RouteID" />
+                        <button class="btn btn-sm btn-outline-@(r.IsActive ? "warning" : "success")">
+                            @(r.IsActive ? "Deactivate" : "Activate")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

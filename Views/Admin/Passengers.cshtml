@@ -1,0 +1,90 @@
+﻿@model List<BusTicketBookingSystem.Models.Passenger>
+@{
+    ViewData["Title"] = "Passengers";
+}
+
+<h1>👥 Passengers</h1>
+
+@* ============ SEARCH BAR ============ *@
+<form method="get" class="card card-body shadow-sm mb-3">
+    <div class="row g-2 align-items-end">
+        <div class="col-md-5">
+            <label class="form-label small">Search</label>
+            <input name="search" class="form-control"
+                   placeholder="Name, email, or contact..."
+                   value="@ViewBag.Search" />
+        </div>
+        <div class="col-md-3">
+            <label class="form-label small">Gender</label>
+            <select name="gender" class="form-select">
+                <option value="">All</option>
+                <option value="Male" selected="@(ViewBag.Gender == "Male")">Male</option>
+                <option value="Female" selected="@(ViewBag.Gender == "Female")">Female</option>
+                <option value="Other" selected="@(ViewBag.Gender == "Other")">Other</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <label class="form-label small">Status</label>
+            <select name="status" class="form-select">
+                <option value="">All</option>
+                <option value="Active" selected="@(ViewBag.Status == "Active")">Active</option>
+                <option value="Inactive" selected="@(ViewBag.Status == "Inactive")">Inactive</option>
+            </select>
+        </div>
+        <div class="col-md-2">
+            <button type="submit" class="btn btn-primary w-100">🔍 Search</button>
+        </div>
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(ViewBag.Search as string) ||
+         !string.IsNullOrWhiteSpace(ViewBag.Gender as string) ||
+         !string.IsNullOrWhiteSpace(ViewBag.Status as string))
+    {
+        <div class="mt-2">
+            <a asp-action="Passengers" class="btn btn-sm btn-outline-secondary">
+                ✕ Clear filters
+            </a>
+        </div>
+    }
+</form>
+
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Contact</th>
+            <th>Gender</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model)
+        {
+            <tr>
+                <td>@p.PassengerID</td>
+                <td>@p.FullName</td>
+                <td>@p.Email</td>
+                <td>@p.ContactNo</td>
+                <td>@p.Gender</td>
+                <td>
+                    <span class="badge bg-@(p.IsActive ? "success" : "danger")">
+                        @(p.IsActive ? "Active" : "Inactive")
+                    </span>
+                </td>
+                <td>
+                    <form asp-action="TogglePassenger" method="post" class="d-inline">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="id" value="@p.PassengerID" />
+                        <button class="btn btn-sm btn-@(p.IsActive ? "warning" : "success")">
+                            @(p.IsActive ? "Deactivate" : "Activate")
+                        </button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

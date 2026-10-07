@@ -1,0 +1,33 @@
+﻿@model List<BusTicketBookingSystem.Models.PaymentRequest>
+@{ ViewData["Title"] = "Pending Payments"; }
+
+<h1>💳 Pending Payment Requests</h1>
+
+@if (!Model.Any())
+{
+    <div class="alert alert-info">No pending requests.</div>
+}
+else
+{
+    <table class="table table-striped">
+        <thead>
+            <tr><th>Booking #</th><th>Passenger</th><th>Route</th><th>Amount</th><th>Method</th><th>Submitted</th><th>Actions</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var p in Model)
+            {
+                <tr>
+                    <td>@p.Booking?.BookingNumber</td>
+                    <td>@p.Booking?.Passenger?.FullName</td>
+                    <td>@p.Booking?.Schedule?.Bus?.Route?.RouteName</td>
+                    <td>Rs. @p.Amount.ToString("N0")</td>
+                    <td>@p.PaymentMethod</td>
+                    <td>@p.SubmittedAt.ToString("dd MMM yyyy HH:mm")</td>
+                    <td>
+                        <a asp-action="Review" asp-route-id="@p.PaymentRequestID" class="btn btn-sm btn-primary">Review</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

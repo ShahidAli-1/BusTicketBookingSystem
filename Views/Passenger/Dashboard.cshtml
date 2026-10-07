@@ -1,0 +1,108 @@
+﻿@model List<BusTicketBookingSystem.Models.Booking>
+@{
+    ViewData["Title"] = "Passenger Dashboard";
+}
+
+<h1>👋 Welcome, @User.Identity?.Name</h1>
+
+<div class="row mt-4">
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Passenger" asp-action="BookingHistory"
+           class="text-decoration-none">
+            <div class="card text-white bg-primary h-100 stat-card">
+                <div class="card-body">
+                    <h6>Total Bookings</h6>
+                    <h2>@ViewBag.TotalBookings</h2>
+                    <small>View all →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Passenger" asp-action="BookingHistory"
+           asp-route-status="Confirmed"
+           class="text-decoration-none">
+            <div class="card text-white bg-success h-100 stat-card">
+                <div class="card-body">
+                    <h6>Confirmed</h6>
+                    <h2>@ViewBag.ConfirmedBookings</h2>
+                    <small>View confirmed →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Passenger" asp-action="BookingHistory"
+           asp-route-status="PendingApproval"
+           class="text-decoration-none">
+            <div class="card text-white bg-warning h-100 stat-card">
+                <div class="card-body">
+                    <h6>Pending</h6>
+                    <h2>@ViewBag.PendingBookings</h2>
+                    <small>View pending →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a asp-controller="Passenger" asp-action="BookingHistory"
+           asp-route-status="Confirmed"
+           class="text-decoration-none">
+            <div class="card text-white bg-info h-100 stat-card">
+                <div class="card-body">
+                    <h6>Total Spent</h6>
+                    <h2>Rs. @ViewBag.TotalSpent.ToString("N0")</h2>
+                    <small>View transactions →</small>
+                </div>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+<div class="mt-4">
+    <a asp-controller="Booking" asp-action="Search" class="btn btn-primary">🔍 Search Buses</a>
+    <a asp-controller="Passenger" asp-action="BookingHistory" class="btn btn-outline-primary">📋 My Bookings</a>
+    <a asp-controller="Passenger" asp-action="Profile" class="btn btn-outline-secondary">👤 My Profile</a>
+</div>
+
+<h3 class="mt-4">Recent Bookings</h3>
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th>Booking #</th>
+            <th>Route</th>
+            <th>Travel Date</th>
+            <th>Fare</th>
+            <th>Status</th>
+            <th>Action</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var b in Model)
+        {
+            <tr>
+                <td>@b.BookingNumber</td>
+                <td>@b.Schedule?.Bus?.Route?.Origin → @b.Schedule?.Bus?.Route?.Destination</td>
+                <td>@b.Schedule?.TravelDate.ToString("dd MMM yyyy")</td>
+                <td>Rs. @b.Fare.ToString("N0")</td>
+                <td>
+                    <span class="badge bg-@(b.Status switch {
+                        "Confirmed" => "success",
+                        "PendingApproval" => "warning",
+                        "Reserved" => "info",
+                        "Rejected" => "danger",
+                        _ => "secondary"
+                    })">@b.Status</span>
+                </td>
+                <td>
+                    <a asp-controller="Booking" asp-action="Details" asp-route-id="@b.BookingID" class="btn btn-sm btn-outline-primary">View</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
