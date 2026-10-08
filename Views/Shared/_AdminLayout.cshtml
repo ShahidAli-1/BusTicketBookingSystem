@@ -1,0 +1,128 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Admin Panel</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/dashboard-layout.css" asp-append-version="true" />
+</head>
+<body>
+
+<div class="admin-wrapper">
+
+    @* ============ SIDEBAR ============ *@
+    <aside class="admin-sidebar" id="adminSidebar">
+
+        <div class="brand">
+            🚌 <span>BusAdmin</span>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Main</div>
+
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Dashboard" ? "active" : "")"
+               asp-controller="Admin" asp-action="Dashboard">
+                <i>📊</i> Dashboard
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Management</div>
+
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Bus" ? "active" : "")"
+               asp-controller="Bus" asp-action="Index">
+                <i>🚌</i> Buses
+            </a>
+
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Route" ? "active" : "")"
+               asp-controller="Route" asp-action="Index">
+                <i>🗺️</i> Routes
+            </a>
+
+            <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Schedule" ? "active" : "")"
+               asp-controller="Schedule" asp-action="Index">
+                <i>📅</i> Schedules
+            </a>
+        </div>
+
+        <div class="nav-section">
+            <div class="nav-section-title">Bookings</div>
+
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Pending" ? "active" : "")"
+               asp-controller="Payment" asp-action="Pending">
+                <i>💳</i> Payment Requests
+            </a>
+
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Passengers" ? "active" : "")"
+               asp-controller="Admin" asp-action="Passengers">
+                <i>👥</i> Passengers
+            </a>
+
+            <a class="nav-link @(ViewContext.RouteData.Values["action"]?.ToString() == "Reports" ? "active" : "")"
+               asp-controller="Admin" asp-action="Reports">
+                <i>📈</i> Reports
+            </a>
+        </div>
+
+        <div class="sidebar-footer">
+            © @DateTime.Now.Year BusAdmin v1.0
+        </div>
+    </aside>
+
+    @* ============ MAIN CONTENT ============ *@
+    <div class="admin-main">
+
+        <header class="admin-topbar">
+            <div class="d-flex align-items-center gap-3">
+                <button class="sidebar-toggle" onclick="toggleSidebar()">☰</button>
+                <h1 class="page-title">@ViewData["Title"]</h1>
+            </div>
+
+            <div class="user-info">
+                <span class="user-name">👤 @User.Identity?.Name</span>
+                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                    @Html.AntiForgeryToken()
+                    <button type="submit" class="btn btn-sm btn-outline-danger">
+                        Logout
+                    </button>
+                </form>
+            </div>
+        </header>
+
+        <main class="admin-content">
+            @if (TempData["Message"] != null)
+            {
+                <div class="alert alert-success alert-dismissible fade show">
+                    @TempData["Message"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <div class="alert alert-danger alert-dismissible fade show">
+                    @TempData["Error"]
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            }
+
+            @RenderBody()
+        </main>
+
+    </div>
+</div>
+
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function toggleSidebar() {
+        document.getElementById('adminSidebar').classList.toggle('show');
+    }
+</script>
+
+@await RenderSectionAsync("Scripts", required: false)
+
+</body>
+</html>
