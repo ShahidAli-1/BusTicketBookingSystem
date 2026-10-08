@@ -34,5 +34,5 @@ A web-based bus ticket booking system built with **ASP.NET Core MVC 6** and **SQ
 
 1. **Clone the repo**
    ```bash
-   git clone https://github.com/YOUR_USERNAME/BusTicketBookingSystem.git
+   git clone https://github.com/Shahidali-1/BusTicketBookingSystem.git
    cd BusTicketBookingSystem
